@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router'
 
 import { ApiErrorState, PageError } from '@/components/PageState'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useApi } from '@/hooks/useApi'
 import { usePeriod } from '@/hooks/usePeriod'
@@ -89,6 +89,13 @@ export function RecommendationPage() {
             <CardHeader>
               <CardTitle>Next steps</CardTitle>
               <CardDescription>Things you can do together, outside CloseGuard.</CardDescription>
+              <CardAction>
+                {/* Decorative mascot. Reduced-motion users get a still frame instead of the looping GIF. */}
+                <picture aria-hidden>
+                  <source media="(prefers-reduced-motion: reduce)" srcSet="/brand/owl-lightbulb-still.png" />
+                  <img src="/brand/owl-lightbulb.gif" alt="" width={84} height={112} className="h-[106px] w-auto md:h-[138px]" draggable={false} />
+                </picture>
+              </CardAction>
             </CardHeader>
             <CardContent>
               <ol className="space-y-4">
