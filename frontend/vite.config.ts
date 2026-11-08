@@ -15,7 +15,7 @@ export default defineConfig({
       manifest: {
         name: 'CloseGuard',
         short_name: 'CloseGuard',
-        description: 'Family scam-awareness dashboard. Protection is stronger together.',
+        description: 'Family scam-awareness dashboard. Stay Alert with Owlert.',
         theme_color: '#3a2519',
         background_color: '#f4efe9',
         display: 'standalone',

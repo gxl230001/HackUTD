@@ -1,6 +1,6 @@
 # CloseGuard
 
-**Protection is stronger together.**
+**Stay Alert with Owlert.**
 
 CloseGuard is a family scam-awareness dashboard that complements T-Mobile Scam
 Shield. It turns individual scam-protection signals into family-level insight

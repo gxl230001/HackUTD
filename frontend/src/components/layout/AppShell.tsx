@@ -40,7 +40,7 @@ export function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <p className="mt-auto px-4 text-xs text-sidebar-foreground">Protection is stronger together.</p>
+        <p className="mt-auto px-4 text-xs text-sidebar-foreground">Stay Alert with Owlert.</p>
       </aside>
 
       <div className="min-h-dvh md:ml-60 md:min-h-[calc(100dvh-2rem)] md:rounded-[36px] md:bg-background">
