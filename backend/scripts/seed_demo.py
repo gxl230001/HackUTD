@@ -1,4 +1,4 @@
-"""Seed the CloseGuard demo account, family and members.
+"""Seed the Owlert demo account, family and members.
 
 Creates (or reuses) the demo auth user, one fictional family, three fictional
 members, the profile linking the user to the family, and 90 days of synthetic

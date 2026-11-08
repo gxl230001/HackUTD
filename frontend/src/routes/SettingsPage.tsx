@@ -45,15 +45,15 @@ export function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>About CloseGuard</CardTitle>
+            <CardTitle>About Owlert</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-base text-muted-foreground">
             <p>
-              CloseGuard turns individual Scam Shield protection signals into a family-level view,
+              Owlert turns individual Scam Shield protection signals into a family-level view,
               so the account holder can spot patterns and help everyone stay protected.
             </p>
             <p>
-              Recommendations are guidance only. CloseGuard can’t change Scam Shield settings or
+              Recommendations are guidance only. Owlert can’t change Scam Shield settings or
               subscriptions.
             </p>
             <HealthStatus className="rounded-full bg-surface-soft px-3.5 py-2 font-medium text-foreground" />

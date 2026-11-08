@@ -88,7 +88,7 @@ export function RecommendationPage() {
           <Card className="px-1">
             <CardHeader>
               <CardTitle>Next steps</CardTitle>
-              <CardDescription>Things you can do together, outside CloseGuard.</CardDescription>
+              <CardDescription>Things you can do together, outside Owlert.</CardDescription>
               <CardAction>
                 {/* Decorative mascot. Reduced-motion users get a still frame instead of the looping GIF. */}
                 <picture aria-hidden>
@@ -131,7 +131,7 @@ export function RecommendationPage() {
           <Card>
             <CardHeader>
               <CardTitle>Relevant Scam Shield features</CardTitle>
-              <CardDescription>Managed through T-Mobile, not CloseGuard.</CardDescription>
+              <CardDescription>Managed through T-Mobile, not Owlert.</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
@@ -148,7 +148,7 @@ export function RecommendationPage() {
       </div>
 
       <p className="mt-6 text-xs text-muted-foreground">
-        CloseGuard can’t change Scam Shield settings or subscriptions. Answering or returning a suspicious call does not mean
+        Owlert can’t change Scam Shield settings or subscriptions. Answering or returning a suspicious call does not mean
         someone was scammed.
       </p>
     </>

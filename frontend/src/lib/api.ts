@@ -11,7 +11,7 @@ export class ApiError extends Error {
   }
 }
 
-const SESSION_EXPIRED_KEY = 'closeguard:session-expired'
+const SESSION_EXPIRED_KEY = 'owlert:session-expired'
 
 /** True once after the backend rejected the session; read by the sign-in page. */
 export function consumeSessionExpired(): boolean {
@@ -35,7 +35,7 @@ async function handleUnauthorized(): Promise<void> {
 
 /** A message suitable for showing to the account holder. */
 export function friendlyError(error: ApiError): string {
-  if (error.status === 0) return 'Can’t reach the CloseGuard server. Check your connection and try again.'
+  if (error.status === 0) return 'Can’t reach the Owlert server. Check your connection and try again.'
   if (error.status === 403) return 'No family is linked to this account yet.'
   if (error.status >= 500 && /Request failed/.test(error.message)) return 'Something went wrong on our side. Please try again.'
   return error.message
@@ -48,7 +48,7 @@ async function authHeader(): Promise<Record<string, string>> {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
-/** GET a JSON resource from the CloseGuard backend with the user's access token. */
+/** GET a JSON resource from the Owlert backend with the user's access token. */
 export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> {
   let response: Response
   try {
@@ -58,7 +58,7 @@ export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> 
     })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error
-    throw new ApiError(0, 'Can’t reach the CloseGuard server.')
+    throw new ApiError(0, 'Can’t reach the Owlert server.')
   }
 
   if (response.status === 401 && supabase) {

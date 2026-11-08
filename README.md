@@ -1,12 +1,12 @@
-# CloseGuard
+# Owlert
 
 **Stay Alert with Owlert.**
 
-CloseGuard is a family scam-awareness dashboard that complements T-Mobile Scam
+Owlert is a family scam-awareness dashboard that complements T-Mobile Scam
 Shield. It turns individual scam-protection signals into family-level insight
 for the plan's account holder.
 
-> **Demo disclosure:** CloseGuard is a hackathon prototype. It is **not
+> **Demo disclosure:** Owlert is a hackathon prototype. It is **not
 > connected** to T-Mobile Scam Shield or any T-Mobile account. All families,
 > members and activity are fictional, synthetic demo data.
 
@@ -204,7 +204,7 @@ and only the explanation endpoint ever calls Gemini.
 
 | Situation | What the user sees |
 |---|---|
-| Backend unreachable | “Can’t reach the CloseGuard server” with **Try again**; sign-in page shows *Server unreachable* |
+| Backend unreachable | “Can’t reach the Owlert server” with **Try again**; sign-in page shows *Server unreachable* |
 | Database error | `503` → “The data service is unavailable” with **Try again** (internals logged, never returned) |
 | Unexpected server error | `500` → “Something went wrong on our side” (logged with an `X-Request-ID`) |
 | Session expired or revoked | Backend `401` → signed out locally → sign-in page says “Your session ended” |
@@ -259,7 +259,7 @@ After both are live, set `CORS_ORIGINS` on Render to the exact Vercel URL
 
 ## Future T-Mobile integration boundary
 
-CloseGuard is built so a real, **authorized** data source can replace the
+Owlert is built so a real, **authorized** data source can replace the
 synthetic generator without touching analytics or UI:
 
 1. Implement an ingestion job that normalizes upstream records into
@@ -279,10 +279,10 @@ exists today and nothing in this repo claims otherwise.
 
 - All data is synthetic. Patterns are designed to be illustrative, not representative.
 - Recommendation thresholds are demo heuristics, not validated research.
-- “Answered” and “returned” are observed activity only; CloseGuard cannot know
+- “Answered” and “returned” are observed activity only; Owlert cannot know
   what was said or whether anything was shared.
 - Scam Shield feature descriptions are general; check T-Mobile for current
-  features, pricing and plan inclusion. CloseGuard cannot change settings.
+  features, pricing and plan inclusion. Owlert cannot change settings.
 - Single account-holder role; members do not sign in.
 - Gemini free tier has low rate limits; the cache and fallback cover this.
 - `npm audit` reports moderate advisories in build-time tooling

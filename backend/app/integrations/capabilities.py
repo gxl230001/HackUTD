@@ -24,7 +24,7 @@ SOURCE_SIGNALS: dict[str, frozenset[str]] = {
     "user_submitted": frozenset({"reported"}),
 }
 
-# Sources currently feeding CloseGuard. Only synthetic data for the hackathon demo.
+# Sources currently feeding Owlert. Only synthetic data for the hackathon demo.
 ACTIVE_SOURCES: tuple[str, ...] = ("synthetic_demo",)
 
 

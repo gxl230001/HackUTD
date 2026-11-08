@@ -14,7 +14,7 @@ export function RouteError() {
       <AlertTriangle className="size-8 text-orange-deep" aria-hidden />
       <h1 className="text-xl font-semibold">{isRouteErrorResponse(error) && error.status === 404 ? 'Page not found' : 'Something went wrong'}</h1>
       <p className="max-w-sm text-sm text-muted-foreground">
-        {chunkFailed ? 'A newer version of CloseGuard is available.' : 'This screen hit an unexpected problem. Reloading usually fixes it.'}
+        {chunkFailed ? 'A newer version of Owlert is available.' : 'This screen hit an unexpected problem. Reloading usually fixes it.'}
       </p>
       <div className="flex gap-2">
         <Button onClick={() => window.location.reload()}>Reload</Button>

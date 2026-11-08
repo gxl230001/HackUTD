@@ -15,7 +15,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from postgrest.exceptions import APIError as PostgrestAPIError
 
-logger = logging.getLogger("closeguard.api")
+logger = logging.getLogger("owlert.api")
 
 
 def _field(loc: tuple) -> str:

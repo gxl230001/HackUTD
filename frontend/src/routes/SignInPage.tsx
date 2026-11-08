@@ -46,9 +46,9 @@ export function SignInPage() {
     <div className="flex min-h-dvh flex-col gap-4 bg-background p-4 md:flex-row">
       <section className="flex flex-col justify-center gap-6 rounded-[36px] bg-primary p-8 text-primary-foreground md:flex-1 md:p-16">
         <Logo light />
-        <h1 className="text-4xl font-bold tracking-tight text-balance md:text-5xl">Stay Alert with Owlert.</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-balance md:text-5xl">Stay Wise to the Warning Signs</h1>
         <p className="max-w-xl text-lg text-on-ink-soft text-pretty">
-          CloseGuard turns individual scam-protection signals into family-level insight. It
+          Owlert turns individual scam-protection signals into family-level insight. It
           complements T-Mobile Scam Shield — it doesn’t replace it.
         </p>
         <ul className="space-y-3.5">

@@ -1,4 +1,4 @@
-"""CloseGuard API entry point."""
+"""Owlert API entry point."""
 
 import logging
 
@@ -15,7 +15,7 @@ def create_app() -> FastAPI:
     logging.basicConfig(level=settings.log_level.upper(), format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     app = FastAPI(
-        title="CloseGuard API",
+        title="Owlert API",
         version="1.0.0",
         description="Family scam-awareness analytics.",
     )

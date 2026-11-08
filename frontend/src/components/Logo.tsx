@@ -6,7 +6,7 @@ export function Logo({ className, markClassName, light = false }: { className?: 
       <span aria-hidden className={cn('grid size-11 place-items-center rounded-2xl bg-sage-soft', markClassName)}>
         <img src="/brand/owl.png" alt="" width={34} height={34} className="size-[34px] object-contain" draggable={false} />
       </span>
-      CloseGuard
+      Owlert
     </span>
   )
 }

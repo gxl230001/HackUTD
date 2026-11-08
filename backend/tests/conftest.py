@@ -51,7 +51,7 @@ def make_token(user_id: UUID, *, secret: str = JWT_SECRET, expires_in: int = 360
     now = int(time.time())
     claims = {
         "sub": str(user_id),
-        "email": "demo@closeguard.test",
+        "email": "demo@owlert.test",
         "aud": audience,
         "iss": issuer or f"{SUPABASE_URL}/auth/v1",
         "iat": now,

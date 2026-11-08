@@ -13,8 +13,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
-        name: 'CloseGuard',
-        short_name: 'CloseGuard',
+        name: 'Owlert',
+        short_name: 'Owlert',
         description: 'Family scam-awareness dashboard. Stay Alert with Owlert.',
         theme_color: '#3a2519',
         background_color: '#f4efe9',

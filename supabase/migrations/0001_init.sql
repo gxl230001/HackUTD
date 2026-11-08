@@ -1,4 +1,4 @@
--- CloseGuard — initial schema (Phase 1)
+-- Owlert — initial schema (Phase 1)
 -- Apply in the Supabase SQL editor, or with `supabase db push` if you use the CLI.
 -- Re-running is safe: objects are created only if missing.
 
@@ -84,7 +84,7 @@ create unique index if not exists scam_events_source_external_ref_uidx
 
 -- Row level security ----------------------------------------------------------
 -- RLS is enabled with NO policies for anon/authenticated roles: browsers cannot
--- read or write these tables directly. The CloseGuard backend uses the
+-- read or write these tables directly. The Owlert backend uses the
 -- service-role key and enforces family ownership itself.
 alter table public.families       enable row level security;
 alter table public.family_members enable row level security;
