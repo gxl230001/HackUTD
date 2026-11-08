@@ -121,7 +121,7 @@ def test_explanation_uses_valid_ai_output_and_caches(client, events_repo, settin
     assert len(calls) == 1  # second request served from cache
     # Gemini only receives aggregate metrics, never raw events or phone labels.
     assert set(calls[0]) == {"member_display_name", "reporting_period_days", "recommendation_category", "recommendation_title",
-                             "reasons", "supporting_metrics", "relevant_features", "may_mention_premium", "data_note"}
+                             "reasons", "supporting_metrics", "relevant_features", "may_mention_premium"}
     assert "Ending in" not in str(calls[0])
 
 

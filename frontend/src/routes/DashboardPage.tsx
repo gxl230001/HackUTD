@@ -1,6 +1,5 @@
 import { MemberComparison } from '@/components/charts/MemberComparison'
 import { TrendChart } from '@/components/charts/TrendChart'
-import { DataSources } from '@/components/DataSources'
 import { MetricOverview } from '@/components/MetricOverview'
 import { PageHeader } from '@/components/PageHeader'
 import { ApiErrorState, DashboardSkeleton, PageLoading } from '@/components/PageState'
@@ -38,7 +37,6 @@ export function DashboardPage() {
 
       {summary.status === 'success' && (
         <div className="space-y-7">
-          <DataSources sources={summary.data.data_sources} />
           <MetricOverview metrics={summary.data.totals} />
 
           <Card>

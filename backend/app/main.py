@@ -17,7 +17,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="CloseGuard API",
         version="1.0.0",
-        description="Family scam-awareness analytics. Demo data is synthetic; not connected to T-Mobile.",
+        description="Family scam-awareness analytics.",
     )
     app.add_middleware(
         CORSMiddleware,

@@ -12,7 +12,7 @@ from app.schemas.analytics import MemberMetrics
 from app.schemas.recommendations import Evidence, Feature, Recommendation
 
 DISCLAIMER = (
-    "Recommendations are based on simulated activity and demo thresholds. Answering or returning a "
+    "Recommendations are guidance based on observed activity patterns. Answering or returning a "
     "suspicious call does not mean someone was scammed."
 )
 

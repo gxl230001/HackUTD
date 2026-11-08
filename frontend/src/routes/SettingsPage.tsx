@@ -26,7 +26,7 @@ export function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" description="Account and demo information" />
+      <PageHeader title="Settings" description="Account and app information" />
       <div className="grid max-w-3xl gap-4">
         <Card>
           <CardHeader>
@@ -45,17 +45,16 @@ export function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>About this demo</CardTitle>
+            <CardTitle>About CloseGuard</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-base text-muted-foreground">
             <p>
-              CloseGuard is a hackathon prototype. Every family, member and activity record shown is
-              fictional and generated for demonstration.
+              CloseGuard turns individual Scam Shield protection signals into a family-level view,
+              so the account holder can spot patterns and help everyone stay protected.
             </p>
             <p>
-              CloseGuard is <strong className="text-foreground">not connected</strong> to T-Mobile
-              Scam Shield or any T-Mobile account. A future version would need an authorized
-              integration to show real activity.
+              Recommendations are guidance only. CloseGuard can’t change Scam Shield settings or
+              subscriptions.
             </p>
             <HealthStatus className="rounded-full bg-surface-soft px-3.5 py-2 font-medium text-foreground" />
           </CardContent>

@@ -89,7 +89,6 @@ def build_payload(rec: Recommendation, member_name: str, period_days: int) -> di
         "supporting_metrics": [{"label": e.label, "value": e.value} for e in rec.evidence],
         "relevant_features": [{"name": f.name, "description": f.description} for f in rec.features],
         "may_mention_premium": rec.mentions_premium,
-        "data_note": "All activity is simulated demo data.",
     }
 
 

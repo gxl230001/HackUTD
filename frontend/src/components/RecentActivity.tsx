@@ -29,7 +29,6 @@ export function RecentActivity({ events }: { events: RecentEvent[] }) {
               </p>
               <p className="truncate text-xs text-muted-foreground">
                 {event.scam_category_label ?? 'Uncategorized'}
-                {event.source === 'synthetic_demo' && ' · Simulated'}
               </p>
             </div>
             <time dateTime={event.timestamp} title={dateTime(event.timestamp)} className="shrink-0 rounded-full bg-card px-2.5 py-1 text-xs text-muted-foreground">

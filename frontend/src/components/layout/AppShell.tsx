@@ -1,6 +1,5 @@
 import { NavLink, Outlet, ScrollRestoration } from 'react-router'
 
-import { DemoDataBanner } from '@/components/DemoDataBanner'
 import { Logo } from '@/components/Logo'
 import { OfflineBanner } from '@/components/OfflineBanner'
 import { NAV_ITEMS } from '@/components/layout/nav-items'
@@ -49,7 +48,6 @@ export function AppShell() {
           <Logo />
         </header>
         <main className="mx-auto w-full max-w-6xl px-4 pt-4 pb-32 md:px-8 md:pt-8 md:pb-12">
-          <DemoDataBanner className="mb-6" />
           <Outlet />
         </main>
       </div>

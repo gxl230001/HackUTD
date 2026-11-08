@@ -2,7 +2,6 @@ import { ArrowLeft, Check, CircleDashed, Minus } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 
 import { TrendChart } from '@/components/charts/TrendChart'
-import { DataSources } from '@/components/DataSources'
 import { MemberAvatar } from '@/components/MemberAvatar'
 import { MetricOverview } from '@/components/MetricOverview'
 import { PageHeader } from '@/components/PageHeader'
@@ -64,7 +63,7 @@ export function MemberPage() {
     )
   }
 
-  const { member, metrics, trends, patterns, protection_behaviors, data_sources } = insights.data
+  const { member, metrics, trends, patterns, protection_behaviors } = insights.data
   const subtitle = [member.relationship, member.phone_label].filter(Boolean).join(' · ') || 'Family member'
 
   return (
@@ -78,7 +77,6 @@ export function MemberPage() {
       />
 
       <div className="space-y-7">
-        <DataSources sources={data_sources} />
         <MetricOverview metrics={metrics} />
 
         <Card>

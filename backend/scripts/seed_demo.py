@@ -25,7 +25,7 @@ from app.integrations.synthetic import SOURCE, generate_family_events  # noqa: E
 NAMESPACE = UUID("6f1c2b7e-0d4a-4c3e-9a51-3c1e2f0a9b10")
 FAMILY_ID = uuid5(NAMESPACE, "family:demo")
 
-FAMILY = {"id": str(FAMILY_ID), "name": "The Rivera Family (Demo)"}
+FAMILY = {"id": str(FAMILY_ID), "name": "The Rivera Family"}
 # Fictional people. Phone labels are made up and not real numbers.
 MEMBERS = [
     {"key": "mom", "display_name": "Mom", "relationship": "Parent", "phone_label": "Ending in 0142"},
@@ -98,7 +98,7 @@ def main() -> None:
         ]
     ).execute()
     db.table("profiles").upsert(
-        {"id": user_id, "family_id": str(FAMILY_ID), "display_name": "Demo account holder"}
+        {"id": user_id, "family_id": str(FAMILY_ID), "display_name": "Account holder"}
     ).execute()
 
     member_ids = {m["key"]: str(uuid5(NAMESPACE, f"member:{m['key']}")) for m in MEMBERS}

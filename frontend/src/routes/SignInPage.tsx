@@ -3,7 +3,6 @@ import { Check } from 'lucide-react'
 import { Navigate, useLocation } from 'react-router'
 
 import { useAuth } from '@/auth/auth-context'
-import { DemoDataBanner } from '@/components/DemoDataBanner'
 import { HealthStatus } from '@/components/HealthStatus'
 import { Logo } from '@/components/Logo'
 import { PageError, PageLoading } from '@/components/PageState'
@@ -65,7 +64,6 @@ export function SignInPage() {
       </section>
 
       <div className="flex flex-col justify-center gap-5 md:w-[34rem] md:px-8">
-        <DemoDataBanner />
         <Card className="w-full gap-4 p-1.5">
           <CardHeader className="px-6 pt-5">
             <CardTitle className="text-xl">Sign in</CardTitle>

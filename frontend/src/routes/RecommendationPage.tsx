@@ -65,7 +65,7 @@ export function RecommendationPage() {
           ) : (
             <Badge variant="outline">Standard explanation</Badge>
           )}
-          <span className="text-xs text-muted-foreground">Based on the {periodLabel(e.period.key).toLowerCase()} · simulated data</span>
+          <span className="text-xs text-muted-foreground">Based on the {periodLabel(e.period.key).toLowerCase()}</span>
         </div>
       </div>
 
@@ -141,7 +141,7 @@ export function RecommendationPage() {
       </div>
 
       <p className="mt-6 text-xs text-muted-foreground">
-        CloseGuard is not connected to T-Mobile and can’t change settings or subscriptions. Answering or returning a suspicious call does not mean
+        CloseGuard can’t change Scam Shield settings or subscriptions. Answering or returning a suspicious call does not mean
         someone was scammed.
       </p>
     </>
