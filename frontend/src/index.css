@@ -49,6 +49,11 @@
 }
 
 :root {
+    /* Chart series — validated categorical slots 1–3 (CVD-safe all-pairs).
+       Color follows the measure everywhere: exposure, interactions, blocked. */
+    --series-received: #2a78d6;
+    --series-interactions: #eb6834;
+    --series-blocked: #1baf7a;
     --background: oklch(0.985 0.003 250);
     --foreground: oklch(0.2 0.02 260);
     --card: oklch(1 0 0);

@@ -9,6 +9,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.auth import AuthError, CurrentUser, verify_access_token
 from app.config import Settings, get_settings
 from app.db import get_supabase
+from app.repositories.events import EventRepository, SupabaseEventRepository
 from app.repositories.families import FamilyRepository, SupabaseFamilyRepository
 
 _bearer = HTTPBearer(auto_error=False)
@@ -19,6 +20,13 @@ def get_family_repository() -> FamilyRepository:
     if client is None:
         raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Database is not configured.")
     return SupabaseFamilyRepository(client)
+
+
+def get_event_repository() -> EventRepository:
+    client = get_supabase()
+    if client is None:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, "Database is not configured.")
+    return SupabaseEventRepository(client)
 
 
 def get_current_user(
@@ -49,4 +57,5 @@ def get_family_id(
 
 
 Repo = Annotated[FamilyRepository, Depends(get_family_repository)]
+Events = Annotated[EventRepository, Depends(get_event_repository)]
 FamilyId = Annotated[UUID, Depends(get_family_id)]

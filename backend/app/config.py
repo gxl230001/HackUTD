@@ -22,6 +22,14 @@ class Settings(BaseSettings):
     supabase_jwt_secret: str = ""
     supabase_jwt_audience: str = "authenticated"
 
+    # Gemini (optional). Without a key, deterministic fallback explanations are used.
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-2.5-flash"
+    gemini_timeout_seconds: float = 8.0
+    # 0 disables "thinking" on 2.5 Flash models: faster, cheaper, enough for short text.
+    # Set to -1 to leave the model default (needed for models that require thinking).
+    gemini_thinking_budget: int = 0
+
     cors_origins: Annotated[list[str], NoDecode] = Field(default_factory=lambda: ["http://localhost:5173"])
     log_level: str = "INFO"
 

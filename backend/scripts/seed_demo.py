@@ -1,16 +1,18 @@
 """Seed the CloseGuard demo account, family and members.
 
-Phase 1 scope: creates (or reuses) the demo auth user, one fictional family,
-three fictional members, and the profile linking the user to the family.
-It does NOT create scam events.
+Creates (or reuses) the demo auth user, one fictional family, three fictional
+members, the profile linking the user to the family, and 90 days of synthetic
+scam events (source="synthetic_demo") ending at the moment the script runs.
 
-Idempotent: fixed UUIDs + upserts, so it is safe to run repeatedly.
+Idempotent: fixed UUIDs + upserts, and the family's synthetic events are
+replaced on each run. Re-run before a demo so recent periods stay populated.
 
     cd backend && .venv/bin/python -m scripts.seed_demo
 """
 
 import os
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import UUID, uuid5
 
@@ -18,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.config import get_settings  # noqa: E402
 from app.db import get_supabase  # noqa: E402
+from app.integrations.synthetic import SOURCE, generate_family_events  # noqa: E402
 
 NAMESPACE = UUID("6f1c2b7e-0d4a-4c3e-9a51-3c1e2f0a9b10")
 FAMILY_ID = uuid5(NAMESPACE, "family:demo")
@@ -98,7 +101,15 @@ def main() -> None:
         {"id": user_id, "family_id": str(FAMILY_ID), "display_name": "Demo account holder"}
     ).execute()
 
+    member_ids = {m["key"]: str(uuid5(NAMESPACE, f"member:{m['key']}")) for m in MEMBERS}
+    db.table("scam_events").delete().eq("source", SOURCE).in_("family_member_id", list(member_ids.values())).execute()
+    anchor = datetime.now(UTC).replace(second=0, microsecond=0)
+    events = generate_family_events(member_ids, anchor)
+    for start in range(0, len(events), 500):
+        db.table("scam_events").insert(events[start : start + 500]).execute()
+
     print(f"Seeded family '{FAMILY['name']}' with {len(MEMBERS)} members.")
+    print(f"Inserted {len(events)} synthetic events covering the 90 days before {anchor.isoformat()}.")
 
 
 if __name__ == "__main__":

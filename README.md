@@ -15,7 +15,7 @@ for the plan's account holder.
 | Phase | Scope | State |
 |---|---|---|
 | 1 | Skeleton, auth, schema | ✅ Done |
-| 2 | Synthetic data, analytics, dashboard, recommendations, Gemini explanations | Not started |
+| 2 | Synthetic data, analytics, dashboard, recommendations, Gemini explanations | ✅ Done |
 | 3 | Polish, edge cases, PWA, docs | Not started |
 
 ## Architecture
@@ -60,8 +60,8 @@ cd backend
 python3 -m venv .venv
 .venv/bin/pip install -r requirements-dev.txt
 cp .env.example .env        # then fill in values
-.venv/bin/python -m scripts.seed_demo   # creates demo user, family, members
-.venv/bin/uvicorn app.main:app --reload --port 8000
+.venv/bin/python -m scripts.seed_demo   # demo user, family, members + 90 days of synthetic events
+.venv/bin/uvicorn app.main:app --reload --reload-dir app --port 8000
 ```
 
 API docs: <http://localhost:8000/docs> · Health: <http://localhost:8000/api/health>
@@ -90,6 +90,8 @@ Sign in with `DEMO_USER_EMAIL` / `DEMO_USER_PASSWORD` from `backend/.env`.
 | `SUPABASE_JWT_SECRET` | legacy only | Only for projects using the legacy HS256 secret |
 | `CORS_ORIGINS` | yes | Comma-separated, e.g. `http://localhost:5173` |
 | `LOG_LEVEL` | no | Default `INFO` |
+| `GEMINI_API_KEY` | no | Free key from <https://aistudio.google.com/apikey>. Without it, fallback explanations are used. |
+| `GEMINI_MODEL` | no | Default `gemini-2.5-flash`; try `gemini-2.5-flash-lite` if you hit free-tier limits |
 | `DEMO_USER_EMAIL`, `DEMO_USER_PASSWORD` | seed only | Demo account created by `scripts/seed_demo.py` (password ≥ 12 chars) |
 
 **frontend/.env** (public values only — everything `VITE_*` ships to the browser)
@@ -100,7 +102,7 @@ Sign in with `DEMO_USER_EMAIL` / `DEMO_USER_PASSWORD` from `backend/.env`.
 | `VITE_SUPABASE_URL` | Same project URL |
 | `VITE_SUPABASE_ANON_KEY` | anon / publishable key |
 
-## API (Phase 1)
+## API
 
 All routes except health require `Authorization: Bearer <supabase access token>`.
 
@@ -110,6 +112,14 @@ All routes except health require `Authorization: Bearer <supabase access token>`
 | GET | `/api/family` | `{id, name, member_count}` |
 | GET | `/api/members` | `[{id, display_name, relationship, phone_label}]` |
 | GET | `/api/members/{member_id}` | one member, or `404` if not in your family |
+| GET | `/api/dashboard/summary?period&tz` | family totals, per-member comparison, 10 most recent events, data sources |
+| GET | `/api/dashboard/trends?period&tz` | family time series (daily for 7d/30d, weekly for 90d) |
+| GET | `/api/members/{id}/insights?period&tz` | member metrics, trend, observed patterns, protection behaviors |
+| GET | `/api/members/{id}/recommendations?period&tz` | rule-based recommendations with supporting evidence |
+| GET | `/api/members/{id}/recommendations/{category}/explanation?period&tz` | Gemini-worded explanation, or the deterministic fallback |
+
+`period` is `7d`, `30d` (default) or `90d`. `tz` is an IANA timezone (e.g.
+`America/Chicago`) used for day boundaries; default UTC. Invalid values return `422`.
 
 ## Event model
 
@@ -126,3 +136,48 @@ inflated:
 
 `source` is one of `synthetic_demo`, `authorized_external_integration`,
 `user_submitted`. An unanswered call is never recorded as blocked.
+
+## Synthetic demo data
+
+`scripts/seed_demo.py` generates 90 days of fictional activity ending when it
+runs (re-run it before a demo so the recent periods stay populated). It is
+deterministic: exact counts per 30-day block, seeded random timing.
+
+| Member | Per 30 days |
+|---|---|
+| Mom | 30 suspicious calls (18 blocked), 2 answered, 1 reported, 3 texts |
+| Grandpa | 8 suspicious calls (2 blocked), 5 answered, 3 call-backs, 2 texts (1 reply) |
+| Daughter | 10 suspicious calls (5 blocked), 1 answered, 4 reported, 6 texts |
+
+## Analytics
+
+All calculations run in the backend (`app/services/metrics.py`) over
+normalized events, deduplicated by id:
+
+- **Suspicious calls (exposure)** = blocked calls + labeled calls that reached the phone. Call-backs and reports are never exposure.
+- **Blocked share** = blocked ÷ suspicious calls (null, shown as “—”, when there were none).
+- **Suspicious interactions** = answered labeled calls + call-backs + message replies. These are observed activity, not evidence of harm.
+- A metric whose signal no active source provides is returned as `{"value": null, "status": "unavailable"}`, never `0` (`app/integrations/capabilities.py`).
+
+## Recommendations
+
+`app/services/recommendations.py` applies fixed rules with thresholds in
+`app/rules.py` (**demo heuristics, not validated science**). Rates are
+normalized per 30 days, and periods shorter than 30 days are evaluated over
+30 days.
+
+| Category | When |
+|---|---|
+| Review call protection | ≥ 3 answered + returned calls per 30 days, or any call-back |
+| Explore additional protection | interactions in ≥ 3 of the last 6 weeks **and** < 50% of suspicious calls blocked. The only category that mentions Scam Shield Premium. |
+| Keep scam awareness sharp | ≥ 15 suspicious calls and ≤ 3 interactions per 30 days |
+| Try reporting | ≥ 5 suspicious calls and no reports |
+| Current habits look protective | none of the above |
+
+**Gemini** (`app/services/explanations.py`) only rewords the chosen
+recommendation. It receives the category, its supporting metrics, the period
+and the member's display name — no events or phone labels. Output must match a
+JSON schema and is rejected (falling back to the deterministic text) if it
+contains a number not in the input, claims harm or blames the member, or
+mentions Premium when the rule doesn't allow it. Results are cached for 6 hours,
+and only the explanation endpoint ever calls Gemini.
