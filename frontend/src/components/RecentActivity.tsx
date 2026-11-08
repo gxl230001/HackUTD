@@ -15,24 +15,24 @@ export function RecentActivity({ events }: { events: RecentEvent[] }) {
     return <p className="py-6 text-center text-sm text-muted-foreground">No scam activity recorded in this period.</p>
   }
   return (
-    <ul className="divide-y">
+    <ul className="space-y-3">
       {events.map((event) => {
         const Icon = iconFor(event)
         return (
-          <li key={event.id} className="flex items-start gap-3 py-2.5">
-            <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-muted text-muted-foreground">
-              <Icon className="size-4" aria-hidden />
+          <li key={event.id} className="flex items-center gap-3 rounded-[20px] bg-surface-soft p-3">
+            <span className="grid size-11 shrink-0 place-items-center rounded-full bg-card">
+              <Icon className="size-5" aria-hidden />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="text-sm">
-                <span className="font-medium">{event.member_name}</span> · {describeEvent(event)}
+              <p className="text-sm font-medium">
+                <span className="font-semibold">{event.member_name}</span> · {describeEvent(event)}
               </p>
               <p className="truncate text-xs text-muted-foreground">
                 {event.scam_category_label ?? 'Uncategorized'}
                 {event.source === 'synthetic_demo' && ' · Simulated'}
               </p>
             </div>
-            <time dateTime={event.timestamp} title={dateTime(event.timestamp)} className="shrink-0 text-xs text-muted-foreground">
+            <time dateTime={event.timestamp} title={dateTime(event.timestamp)} className="shrink-0 rounded-full bg-card px-2.5 py-1 text-xs text-muted-foreground">
               {relativeTime(event.timestamp)}
             </time>
           </li>

@@ -11,7 +11,7 @@ export function RouteError() {
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-3 px-4 text-center">
-      <AlertTriangle className="size-8 text-amber-600" aria-hidden />
+      <AlertTriangle className="size-8 text-orange-deep" aria-hidden />
       <h1 className="text-xl font-semibold">{isRouteErrorResponse(error) && error.status === 404 ? 'Page not found' : 'Something went wrong'}</h1>
       <p className="max-w-sm text-sm text-muted-foreground">
         {chunkFailed ? 'A newer version of CloseGuard is available.' : 'This screen hit an unexpected problem. Reloading usually fixes it.'}

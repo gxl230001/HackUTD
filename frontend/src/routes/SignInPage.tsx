@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { BarChart3, Lightbulb, Users } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { Navigate, useLocation } from 'react-router'
 
 import { useAuth } from '@/auth/auth-context'
@@ -14,9 +14,9 @@ import { Label } from '@/components/ui/label'
 import { consumeSessionExpired } from '@/lib/api'
 
 const HIGHLIGHTS = [
-  { icon: BarChart3, text: 'See scam exposure across your family plan in one place.' },
-  { icon: Users, text: 'Understand how each member’s activity differs — without blame.' },
-  { icon: Lightbulb, text: 'Get clear, practical protection recommendations.' },
+  'See scam exposure across your family plan in one place.',
+  'Understand how each member’s activity differs — without blame.',
+  'Get clear, practical protection recommendations.',
 ]
 
 export function SignInPage() {
@@ -44,34 +44,34 @@ export function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <DemoDataBanner />
-      <div className="mx-auto grid w-full max-w-5xl flex-1 items-center gap-10 px-4 py-10 md:grid-cols-2 md:px-8">
-        <section>
-          <Logo className="text-lg" />
-          <h1 className="mt-6 text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
-            Protection is stronger together.
-          </h1>
-          <p className="mt-4 text-muted-foreground text-pretty">
-            CloseGuard turns individual scam-protection signals into family-level insight. It
-            complements T-Mobile Scam Shield — it doesn’t replace it.
-          </p>
-          <ul className="mt-6 space-y-3">
-            {HIGHLIGHTS.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-start gap-3 text-sm">
-                <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
-                {text}
-              </li>
-            ))}
-          </ul>
-        </section>
+    <div className="flex min-h-dvh flex-col gap-4 bg-background p-4 md:flex-row">
+      <section className="flex flex-col justify-center gap-6 rounded-[36px] bg-primary p-8 text-primary-foreground md:flex-1 md:p-16">
+        <Logo light />
+        <h1 className="text-4xl font-bold tracking-tight text-balance md:text-5xl">Protection is stronger together.</h1>
+        <p className="max-w-xl text-lg text-on-ink-soft text-pretty">
+          CloseGuard turns individual scam-protection signals into family-level insight. It
+          complements T-Mobile Scam Shield — it doesn’t replace it.
+        </p>
+        <ul className="space-y-3.5">
+          {HIGHLIGHTS.map((text) => (
+            <li key={text} className="flex items-start gap-3 text-base">
+              <span className="mt-px grid size-7 shrink-0 place-items-center rounded-full bg-sage text-foreground">
+                <Check className="size-4" strokeWidth={2.5} aria-hidden />
+              </span>
+              {text}
+            </li>
+          ))}
+        </ul>
+      </section>
 
-        <Card className="w-full max-w-md justify-self-center md:justify-self-end">
-          <CardHeader>
-            <CardTitle className="text-lg">Sign in</CardTitle>
+      <div className="flex flex-col justify-center gap-5 md:w-[34rem] md:px-8">
+        <DemoDataBanner />
+        <Card className="w-full gap-4 p-1.5">
+          <CardHeader className="px-6 pt-5">
+            <CardTitle className="text-xl">Sign in</CardTitle>
             <CardDescription>For family plan account holders.</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-6 pb-5">
             {!configured ? (
               <PageError
                 title="Authentication not configured"
@@ -80,7 +80,7 @@ export function SignInPage() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 {expired && !error && (
-                  <p role="status" className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+                  <p role="status" className="rounded-2xl bg-surface-soft px-4 py-3 text-sm text-muted-foreground">
                     Your session ended. Please sign in again.
                   </p>
                 )}
@@ -107,7 +107,7 @@ export function SignInPage() {
                   />
                 </div>
                 {error && (
-                  <p role="alert" className="text-sm text-destructive">
+                  <p role="alert" className="text-sm font-medium text-destructive">
                     {error}
                   </p>
                 )}
@@ -116,7 +116,9 @@ export function SignInPage() {
                 </Button>
               </form>
             )}
-            <HealthStatus className="mt-4" />
+            <div className="mt-4 flex justify-center">
+              <HealthStatus />
+            </div>
           </CardContent>
         </Card>
       </div>

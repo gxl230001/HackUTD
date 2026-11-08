@@ -9,11 +9,11 @@ export function HealthStatus({ className }: { className?: string }) {
   let tone = 'bg-muted-foreground'
   let text = 'Checking server…'
   if (health.status === 'error') {
-    tone = 'bg-red-500'
+    tone = 'bg-destructive'
     text = 'Server unreachable'
   } else if (health.status === 'success') {
     const ok = health.data.status === 'ok'
-    tone = ok ? 'bg-emerald-500' : 'bg-amber-500'
+    tone = ok ? 'bg-sage-deep' : 'bg-orange'
     text = ok ? 'Server connected' : `Server up · database ${health.data.database.replace('_', ' ')}`
   }
 

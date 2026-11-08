@@ -1,4 +1,4 @@
-import { ArrowRight, Lightbulb } from 'lucide-react'
+import { ArrowRight, Sparkles } from 'lucide-react'
 import { Link } from 'react-router'
 
 import { ApiErrorState, PageLoading } from '@/components/PageState'
@@ -25,16 +25,18 @@ export function RecommendationList({ memberId, period }: { memberId: string; per
           <li key={rec.category}>
             <Link
               to={`/members/${memberId}/recommendations/${rec.category}?period=${period}`}
-              className="group flex gap-3 rounded-xl p-4 ring-1 ring-foreground/10 transition-colors hover:bg-accent/50"
+              className="group flex items-center gap-3.5 rounded-[28px] bg-card p-5 transition-shadow hover:shadow-soft focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground">
-                <Lightbulb className="size-4" aria-hidden />
+              <span className="grid size-12 shrink-0 place-items-center rounded-full bg-primary text-sage">
+                <Sparkles className="size-[22px]" aria-hidden />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-medium">{rec.title}</span>
-                <span className="mt-0.5 block text-xs text-muted-foreground">{rec.reasons[0]}</span>
+                <span className="block text-base font-semibold">{rec.title}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">{rec.reasons[0]}</span>
               </span>
-              <ArrowRight className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" aria-hidden />
+              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform group-hover:translate-x-0.5">
+                <ArrowRight className="size-[18px]" aria-hidden />
+              </span>
             </Link>
           </li>
         ))}

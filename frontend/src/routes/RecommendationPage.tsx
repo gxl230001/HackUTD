@@ -1,4 +1,4 @@
-import { ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowLeft, Sparkles } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 
 import { ApiErrorState, PageError } from '@/components/PageState'
@@ -18,8 +18,11 @@ export function RecommendationPage() {
   )
 
   const back = (
-    <Link to={`/members/${memberId}?period=${period}`} className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-      <ArrowLeft className="size-4" aria-hidden /> Back to member
+    <Link
+      to={`/members/${memberId}?period=${period}`}
+      className="mb-5 inline-flex h-11 items-center gap-2 rounded-full bg-card pr-5 pl-3.5 text-sm font-semibold transition-shadow hover:shadow-soft focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+    >
+      <ArrowLeft className="size-[18px]" aria-hidden /> Back to member
     </Link>
   )
 
@@ -29,8 +32,8 @@ export function RecommendationPage() {
         {back}
         <div className="space-y-4" role="status" aria-label="Preparing explanation">
           <Skeleton className="h-8 w-2/3" />
-          <Skeleton className="h-28 w-full" />
-          <Skeleton className="h-40 w-full" />
+          <Skeleton className="h-28 w-full rounded-[28px]" />
+          <Skeleton className="h-40 w-full rounded-[28px]" />
         </div>
       </>
     )
@@ -54,9 +57,9 @@ export function RecommendationPage() {
     <>
       {back}
       <div className="mb-6">
-        <p className="text-sm text-muted-foreground">Recommendation for {e.member_name}</p>
-        <h1 className="mt-1 text-2xl font-semibold tracking-tight">{e.title}</h1>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+        <p className="text-xs font-bold tracking-wider text-sage-deep uppercase">Recommendation for {e.member_name}</p>
+        <h1 className="mt-1.5 text-3xl font-bold tracking-tight">{e.title}</h1>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
           {e.source === 'ai' ? (
             <Badge variant="secondary"><Sparkles aria-hidden /> AI-assisted wording</Badge>
           ) : (
@@ -66,30 +69,33 @@ export function RecommendationPage() {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-5">
-        <div className="space-y-4 lg:col-span-3">
-          <Card>
+      <div className="grid items-start gap-5 lg:grid-cols-[1fr_21rem]">
+        <div className="space-y-5">
+          <Card className="gap-2.5 px-1">
             <CardHeader><CardTitle>What we’re seeing</CardTitle></CardHeader>
-            <CardContent className="space-y-4 text-sm">
+            <CardContent className="text-base text-muted-foreground">
               <p>{e.summary}</p>
-              <div>
-                <h2 className="mb-1 font-medium">Why it matters</h2>
-                <p className="text-muted-foreground">{e.why_it_matters}</p>
-              </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="gap-2.5 px-1">
+            <CardHeader><CardTitle>Why it matters</CardTitle></CardHeader>
+            <CardContent className="text-base text-muted-foreground">
+              <p>{e.why_it_matters}</p>
+            </CardContent>
+          </Card>
+
+          <Card className="px-1">
             <CardHeader>
               <CardTitle>Next steps</CardTitle>
               <CardDescription>Things you can do together, outside CloseGuard.</CardDescription>
             </CardHeader>
             <CardContent>
-              <ol className="space-y-3">
+              <ol className="space-y-4">
                 {e.next_steps.map((step, i) => (
-                  <li key={step} className="flex gap-3 text-sm">
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">{i + 1}</span>
-                    <span className="pt-0.5">{step}</span>
+                  <li key={step} className="flex gap-3.5 text-sm">
+                    <span className="grid size-8 shrink-0 place-items-center rounded-full bg-sage text-xs font-bold text-foreground">{i + 1}</span>
+                    <span className="pt-1">{step}</span>
                   </li>
                 ))}
               </ol>
@@ -97,7 +103,7 @@ export function RecommendationPage() {
           </Card>
         </div>
 
-        <div className="space-y-4 lg:col-span-2">
+        <div className="space-y-5">
           <Card>
             <CardHeader>
               <CardTitle>Supporting activity</CardTitle>
@@ -106,9 +112,9 @@ export function RecommendationPage() {
             <CardContent>
               <dl className="divide-y">
                 {e.evidence.map((item) => (
-                  <div key={item.key} className="flex items-center justify-between gap-4 py-2 text-sm">
+                  <div key={item.key} className="flex items-center justify-between gap-4 py-3 text-sm">
                     <dt className="text-muted-foreground">{item.label}</dt>
-                    <dd className="font-medium tabular-nums">{item.value}</dd>
+                    <dd className="font-semibold tabular-nums">{item.value}</dd>
                   </div>
                 ))}
               </dl>
@@ -117,15 +123,15 @@ export function RecommendationPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><ShieldCheck className="size-4 text-primary" aria-hidden /> Relevant Scam Shield features</CardTitle>
+              <CardTitle>Relevant Scam Shield features</CardTitle>
               <CardDescription>Managed through T-Mobile, not CloseGuard.</CardDescription>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 {e.features.map((f) => (
-                  <li key={f.name} className="text-sm">
-                    <span className="block font-medium">{f.name}</span>
-                    <span className="block text-muted-foreground">{f.description}</span>
+                  <li key={f.name} className="rounded-[20px] bg-surface-soft p-4 text-sm">
+                    <span className="block font-semibold">{f.name}</span>
+                    <span className="mt-1 block text-xs text-muted-foreground">{f.description}</span>
                   </li>
                 ))}
               </ul>

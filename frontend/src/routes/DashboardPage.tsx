@@ -37,48 +37,45 @@ export function DashboardPage() {
       {summary.status === 'error' && <ApiErrorState title="Couldn’t load family activity" error={summary.error} onRetry={retryAll} />}
 
       {summary.status === 'success' && (
-        <div className="space-y-6">
+        <div className="space-y-7">
           <DataSources sources={summary.data.data_sources} />
           <MetricOverview metrics={summary.data.totals} />
 
-          <div className="grid gap-4 lg:grid-cols-5">
-            <Card className="lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Family scam activity over time</CardTitle>
-                <CardDescription>
-                  {summary.data.period.bucket_days === 1 ? 'Daily' : 'Weekly'} totals across all members, {periodLabel(period).toLowerCase()}.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {trends.status === 'loading' && <PageLoading label="Loading chart" />}
-                {trends.status === 'error' && <ApiErrorState title="Couldn’t load the chart" error={trends.error} onRetry={retryAll} />}
-                {trends.status === 'success' && <TrendChart points={trends.data.points} bucketDays={trends.data.period.bucket_days} />}
-              </CardContent>
-            </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Family scam activity over time</CardTitle>
+              <CardDescription>
+                {summary.data.period.bucket_days === 1 ? 'Daily' : 'Weekly'} totals across all members, {periodLabel(period).toLowerCase()}.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {trends.status === 'loading' && <PageLoading label="Loading chart" />}
+              {trends.status === 'error' && <ApiErrorState title="Couldn’t load the chart" error={trends.error} onRetry={retryAll} />}
+              {trends.status === 'success' && <TrendChart points={trends.data.points} bucketDays={trends.data.period.bucket_days} />}
+            </CardContent>
+          </Card>
 
-            <Card className="lg:col-span-2">
+          <div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-6">
+            <section aria-labelledby="member-comparison" className="space-y-3">
+              <div>
+                <h2 id="member-comparison" className="text-xl font-semibold">Member comparison</h2>
+                <p className="text-xs text-muted-foreground">Receiving suspicious calls and interacting with them are different things. Bars share one scale.</p>
+              </div>
+              <MemberComparison rows={summary.data.members} period={period} />
+            </section>
+
+            <Card>
               <CardHeader>
-                <CardTitle>Member comparison</CardTitle>
-                <CardDescription>Exposure and interactions differ — compare them side by side.</CardDescription>
+                <CardTitle>Recent scam activity</CardTitle>
+                <CardDescription>The 10 most recent events in this period.</CardDescription>
               </CardHeader>
               <CardContent>
-                <MemberComparison rows={summary.data.members} period={period} />
+                <RecentActivity events={summary.data.recent_activity} />
               </CardContent>
             </Card>
           </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent scam activity</CardTitle>
-              <CardDescription>The 10 most recent events in this period.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <RecentActivity events={summary.data.recent_activity} />
-            </CardContent>
-          </Card>
         </div>
       )}
     </>
   )
 }
-
