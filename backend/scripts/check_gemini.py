@@ -23,21 +23,27 @@ SAMPLE = Recommendation(
 )
 
 HINTS = {
-    400: "The key is malformed or the request was rejected. Re-copy the key from AI Studio.",
+    400: "Google rejected the request; the message above says why. If it says the key is invalid, "
+         "re-copy it (or set GEMINI_USE_VERTEXAI=true for a Vertex AI key).",
     401: "The key is invalid. Create a new one at https://aistudio.google.com/apikey.",
-    403: "The key isn't allowed to call the Gemini API (wrong project, or the API is restricted).",
-    404: "Model not found. Set GEMINI_MODEL to a current model, e.g. gemini-2.5-flash-lite.",
+    403: "The key's project can't call this API. In Google Cloud console → APIs & Services, enable the "
+         "Generative Language API (or Vertex AI API if GEMINI_USE_VERTEXAI=true), and check the key's "
+         "API restrictions allow it. A Vertex AI key needs GEMINI_USE_VERTEXAI=true.",
+    404: "Model not available. Set GEMINI_MODEL to a current model, e.g. gemini-3.5-flash or "
+         "gemini-3.5-flash-lite.",
     429: "Free-tier quota hit. Wait a minute (per-minute limit) or until midnight Pacific "
-         "(daily limit), or try GEMINI_MODEL=gemini-2.5-flash-lite.",
+         "(daily limit), or try GEMINI_MODEL=gemini-3.5-flash-lite.",
 }
 
 
 def main() -> int:
     settings = get_settings()
     if not settings.gemini_api_key:
-        print("GEMINI_API_KEY is not set in backend/.env. The app will use fallback explanations.")
+        print("GEMINI_API_KEY (or GOOGLE_API_KEY) is not set in backend/.env. The app will use fallback explanations.")
         return 1
-    print(f"Model: {settings.gemini_model}  (key ...{settings.gemini_api_key[-4:]})")
+    endpoint = "Vertex AI" if settings.gemini_use_vertexai else "Gemini API"
+    thinking = settings.gemini_thinking_level or "model default"
+    print(f"Model: {settings.gemini_model}  Endpoint: {endpoint}  Thinking: {thinking}  (key ...{settings.gemini_api_key[-4:]})")
 
     payload = explanations.build_payload(SAMPLE, "Grandpa", 30)
     try:

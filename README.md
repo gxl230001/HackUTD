@@ -102,10 +102,11 @@ Production build: `npm run build` (output in `frontend/dist`), preview with
 | `SUPABASE_JWT_SECRET` | legacy only | Only for projects using the legacy HS256 secret |
 | `CORS_ORIGINS` | yes | Comma-separated, e.g. `http://localhost:5173` |
 | `LOG_LEVEL` | no | Default `INFO` |
-| `GEMINI_API_KEY` | no | Free key from <https://aistudio.google.com/apikey>. Without it, fallback explanations are used. |
-| `GEMINI_MODEL` | no | Default `gemini-2.5-flash`; try `gemini-2.5-flash-lite` if you hit free-tier limits |
-| `GEMINI_TIMEOUT_SECONDS` | no | Default `8`; after this the fallback explanation is used |
-| `GEMINI_THINKING_BUDGET` | no | Default `0` (thinking off, saves quota); `-1` for models that require thinking |
+| `GEMINI_API_KEY` | no | API key from your Google Gemini / Cloud project (listed at <https://aistudio.google.com/apikey>). `GOOGLE_API_KEY` is also accepted. Without it, fallback explanations are used. |
+| `GEMINI_USE_VERTEXAI` | no | Default `false`. Set `true` only for a key created under **Vertex AI** in the Cloud console |
+| `GEMINI_MODEL` | no | Default `gemini-3.5-flash`; try `gemini-3.5-flash-lite` if you hit free-tier limits |
+| `GEMINI_TIMEOUT_SECONDS` | no | Default `10` (Google's minimum); after this the fallback explanation is used |
+| `GEMINI_THINKING_LEVEL` | no | Default `minimal` (fastest, saves quota); leave empty for the model default |
 
 Check a Gemini key end to end (uses one request of quota):
 `cd backend && .venv/bin/python -m scripts.check_gemini`
@@ -211,7 +212,7 @@ and only the explanation endpoint ever calls Gemini.
 | Account with no linked family | `403` → “No family is linked to this account yet” |
 | Invalid period, timezone or id | `422` with a readable `detail` message |
 | Member or recommendation outside your family / not applicable | `404` → “not found / not available” |
-| Gemini missing, slow (8 s), rate-limited, blocked or invalid | Deterministic explanation, badge “Standard explanation” |
+| Gemini missing, slow (10 s), rate-limited, blocked or invalid | Deterministic explanation, badge “Standard explanation” |
 | A screen crashes or a stale chunk fails after a deploy | Recovery page with **Reload** |
 | Browser offline | Banner: “You’re offline” |
 | Metric not provided by any connected source | “Data unavailable” (never `0`) |
@@ -237,7 +238,7 @@ Safari use **Share → Add to Home Screen**. The app opens to `/dashboard`.
 | Build command | `pip install -r requirements.txt` |
 | Start command | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
 | Health check path | `/api/health` |
-| Environment | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CORS_ORIGINS=https://<your-app>.vercel.app`, optional `GEMINI_API_KEY`, `GEMINI_MODEL` |
+| Environment | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CORS_ORIGINS=https://<your-app>.vercel.app`, optional `GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_USE_VERTEXAI` |
 
 Run the seed script from your machine (it only needs `backend/.env`); it does
 not need to run on Render.

@@ -124,6 +124,8 @@ def _call_gemini(settings: Settings, payload: dict[str, Any]) -> ExplanationText
 
     client = genai.Client(
         api_key=settings.gemini_api_key,
+        # Vertex AI keys use a different endpoint (express mode); other project keys use the Gemini API.
+        vertexai=settings.gemini_use_vertexai,
         http_options=types.HttpOptions(
             timeout=int(settings.gemini_timeout_seconds * 1000),
             retry_options=types.HttpRetryOptions(attempts=1),  # no retries on the free tier
@@ -136,8 +138,8 @@ def _call_gemini(settings: Settings, payload: dict[str, Any]) -> ExplanationText
         "temperature": 0.2,
         "max_output_tokens": 600,
     }
-    if settings.gemini_thinking_budget >= 0:
-        config["thinking_config"] = types.ThinkingConfig(thinking_budget=settings.gemini_thinking_budget)
+    if settings.gemini_thinking_level:
+        config["thinking_config"] = types.ThinkingConfig(thinking_level=settings.gemini_thinking_level)
 
     response = client.models.generate_content(
         model=settings.gemini_model,
