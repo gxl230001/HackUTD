@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { consumeSessionExpired } from '@/lib/api'
 
 const HIGHLIGHTS = [
   { icon: BarChart3, text: 'See scam exposure across your family plan in one place.' },
@@ -24,6 +25,7 @@ export function SignInPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [expired] = useState(consumeSessionExpired)
   const [submitting, setSubmitting] = useState(false)
 
   if (loading) return <PageLoading label="Checking your session" />
@@ -77,6 +79,11 @@ export function SignInPage() {
               />
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                {expired && !error && (
+                  <p role="status" className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+                    Your session ended. Please sign in again.
+                  </p>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input

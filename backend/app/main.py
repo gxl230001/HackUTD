@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes import analytics, family, health
+from app import errors
 from app.config import get_settings
 
 
@@ -15,7 +16,7 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         title="CloseGuard API",
-        version="0.1.0",
+        version="1.0.0",
         description="Family scam-awareness analytics. Demo data is synthetic; not connected to T-Mobile.",
     )
     app.add_middleware(
@@ -24,7 +25,9 @@ def create_app() -> FastAPI:
         allow_credentials=False,
         allow_methods=["GET"],
         allow_headers=["Authorization", "Content-Type"],
+        expose_headers=["X-Request-ID"],
     )
+    errors.install(app)
     app.include_router(health.router, prefix="/api")
     app.include_router(family.router, prefix="/api")
     app.include_router(analytics.router, prefix="/api")

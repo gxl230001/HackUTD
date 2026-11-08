@@ -21,14 +21,20 @@ export function MetricCard({ label, metric, detail, icon: Icon }: { label: strin
   )
 }
 
-export function MetricGroup({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+export function MetricGroup({ title, description, children, className, gridClassName = 'grid-cols-2' }: {
+  title: string
+  description: string
+  children: React.ReactNode
+  className?: string
+  gridClassName?: string
+}) {
   return (
-    <section aria-label={title} className="space-y-2">
+    <section aria-label={title} className={cn('space-y-2', className)}>
       <div>
         <h2 className="text-sm font-semibold">{title}</h2>
         <p className="text-xs text-muted-foreground">{description}</p>
       </div>
-      <div className="grid grid-cols-2 gap-3">{children}</div>
+      <div className={cn('grid gap-3', gridClassName)}>{children}</div>
     </section>
   )
 }

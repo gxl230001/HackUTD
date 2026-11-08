@@ -1,7 +1,7 @@
 import { ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react'
 import { Link, useParams } from 'react-router'
 
-import { PageError } from '@/components/PageState'
+import { ApiErrorState, PageError } from '@/components/PageState'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -40,10 +40,11 @@ export function RecommendationPage() {
     return (
       <>
         {back}
-        <PageError
-          title={missing ? 'Recommendation not available' : 'Couldn’t load this recommendation'}
-          message={missing ? 'This recommendation doesn’t apply to this member for the selected period.' : explanation.error.message}
-        />
+        {missing ? (
+          <PageError title="Recommendation not available" message="This recommendation doesn’t apply to this member for the selected period." />
+        ) : (
+          <ApiErrorState title="Couldn’t load this recommendation" error={explanation.error} onRetry={explanation.retry} />
+        )}
       </>
     )
   }

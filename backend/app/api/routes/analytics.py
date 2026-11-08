@@ -15,7 +15,7 @@ from app.services.periods import DEFAULT_PERIOD, InvalidPeriodError
 router = APIRouter(tags=["analytics"])
 
 Period = Annotated[str, Query(description="Reporting period: 7d, 30d or 90d")]
-Tz = Annotated[str | None, Query(description="IANA timezone for day boundaries, e.g. America/Chicago")]
+Tz = Annotated[str | None, Query(max_length=64, description="IANA timezone for day boundaries, e.g. America/Chicago")]
 T = TypeVar("T")
 
 

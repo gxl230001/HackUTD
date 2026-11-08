@@ -16,7 +16,7 @@ for the plan's account holder.
 |---|---|---|
 | 1 | Skeleton, auth, schema | ✅ Done |
 | 2 | Synthetic data, analytics, dashboard, recommendations, Gemini explanations | ✅ Done |
-| 3 | Polish, edge cases, PWA, docs | Not started |
+| 3 | Polish, edge cases, PWA, docs | ✅ Done |
 
 ## Architecture
 
@@ -78,6 +78,18 @@ npm run dev                  # http://localhost:5173
 ```
 
 Sign in with `DEMO_USER_EMAIL` / `DEMO_USER_PASSWORD` from `backend/.env`.
+
+Production build: `npm run build` (output in `frontend/dist`), preview with
+`npm run preview`. The service worker only runs in the production build.
+
+## Before a demo
+
+1. Re-run the seed so the last 7/30 days are populated:
+   `cd backend && .venv/bin/python -m scripts.seed_demo`
+2. If the backend is on Render's free tier, open `<backend-url>/api/health`
+   about a minute beforehand. Idle services take ~50 s to wake up.
+3. With a Gemini key, open each recommendation once to warm the cache
+   (explanations are cached for 6 hours per member, period and metrics).
 
 ## Environment variables
 
@@ -181,3 +193,91 @@ JSON schema and is rejected (falling back to the deterministic text) if it
 contains a number not in the input, claims harm or blames the member, or
 mentions Premium when the rule doesn't allow it. Results are cached for 6 hours,
 and only the explanation endpoint ever calls Gemini.
+
+## Failure behavior
+
+| Situation | What the user sees |
+|---|---|
+| Backend unreachable | “Can’t reach the CloseGuard server” with **Try again**; sign-in page shows *Server unreachable* |
+| Database error | `503` → “The data service is unavailable” with **Try again** (internals logged, never returned) |
+| Unexpected server error | `500` → “Something went wrong on our side” (logged with an `X-Request-ID`) |
+| Session expired or revoked | Backend `401` → signed out locally → sign-in page says “Your session ended” |
+| Supabase signing keys unreachable | `503` (not `401`, so users are not signed out by an outage) |
+| Account with no linked family | `403` → “No family is linked to this account yet” |
+| Invalid period, timezone or id | `422` with a readable `detail` message |
+| Member or recommendation outside your family / not applicable | `404` → “not found / not available” |
+| Gemini missing, slow (8 s), rate-limited, blocked or invalid | Deterministic explanation, badge “Standard explanation” |
+| A screen crashes or a stale chunk fails after a deploy | Recovery page with **Reload** |
+| Browser offline | Banner: “You’re offline” |
+| Metric not provided by any connected source | “Data unavailable” (never `0`) |
+| No activity in a period | Charts and lists show an explicit empty state |
+
+## Installable app (PWA)
+
+The production build registers a service worker (vite-plugin-pwa) that caches
+the app shell only — API responses are never cached, so activity is always
+fresh or clearly unavailable. On Android/Chrome use **Install app**; on iOS
+Safari use **Share → Add to Home Screen**. The app opens to `/dashboard`.
+
+## Deployment
+
+**Supabase** — already set up by the steps above; nothing extra for production.
+
+**Backend → Render** (Web Service)
+
+| Setting | Value |
+|---|---|
+| Root directory | `backend` |
+| Runtime | Python (version from `backend/.python-version`) |
+| Build command | `pip install -r requirements.txt` |
+| Start command | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| Health check path | `/api/health` |
+| Environment | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CORS_ORIGINS=https://<your-app>.vercel.app`, optional `GEMINI_API_KEY`, `GEMINI_MODEL` |
+
+Run the seed script from your machine (it only needs `backend/.env`); it does
+not need to run on Render.
+
+**Frontend → Vercel**
+
+| Setting | Value |
+|---|---|
+| Root directory | `frontend` |
+| Framework preset | Vite |
+| Environment | `VITE_API_BASE_URL=https://<your-backend>.onrender.com`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` |
+
+`frontend/vercel.json` rewrites every path to `index.html` so deep links like
+`/members/<id>` work, and serves `sw.js` uncached so updates roll out.
+
+After both are live, set `CORS_ORIGINS` on Render to the exact Vercel URL
+(comma-separate multiple origins, no trailing slash).
+
+## Future T-Mobile integration boundary
+
+CloseGuard is built so a real, **authorized** data source can replace the
+synthetic generator without touching analytics or UI:
+
+1. Implement an ingestion job that normalizes upstream records into
+   `scam_events` rows with `source = 'authorized_external_integration'`, one
+   row per activity, a stable `metadata.external_ref` (the unique index
+   rejects duplicates) and `related_event_id` for call-backs/reports.
+2. Declare which signals that source actually provides in
+   `backend/app/integrations/capabilities.py` and add it to `ACTIVE_SOURCES`.
+   Anything it does not provide is shown as “Data unavailable”.
+3. Analytics (`app/services/metrics.py`) consume the normalized
+   `ScamEvent` model only, so no other code changes.
+
+This requires documented authorization and API access from T-Mobile; none
+exists today and nothing in this repo claims otherwise.
+
+## Limitations
+
+- All data is synthetic. Patterns are designed to be illustrative, not representative.
+- Recommendation thresholds are demo heuristics, not validated research.
+- “Answered” and “returned” are observed activity only; CloseGuard cannot know
+  what was said or whether anything was shared.
+- Scam Shield feature descriptions are general; check T-Mobile for current
+  features, pricing and plan inclusion. CloseGuard cannot change settings.
+- Single account-holder role; members do not sign in.
+- Gemini free tier has low rate limits; the cache and fallback cover this.
+- `npm audit` reports moderate advisories in build-time tooling
+  (workbox-build, the shadcn CLI); none of that code ships to the browser.

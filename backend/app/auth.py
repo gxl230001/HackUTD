@@ -24,6 +24,10 @@ class AuthError(Exception):
     """Token missing, malformed, expired or not issued by this project."""
 
 
+class AuthUnavailableError(Exception):
+    """The signing keys could not be fetched. A server-side problem, not the user's token."""
+
+
 @dataclass(frozen=True)
 class CurrentUser:
     id: UUID
@@ -67,6 +71,9 @@ def verify_access_token(token: str, settings: Settings) -> CurrentUser:
         )
     except jwt.ExpiredSignatureError as exc:
         raise AuthError("Access token has expired.") from exc
+    except jwt.PyJWKClientConnectionError as exc:
+        logger.error("Could not reach the Supabase JWKS endpoint: %s", exc)
+        raise AuthUnavailableError("Sign-in verification is temporarily unavailable.") from exc
     except jwt.PyJWKClientError as exc:
         logger.warning("JWKS lookup failed: %s", exc)
         raise AuthError("Could not verify access token.") from exc

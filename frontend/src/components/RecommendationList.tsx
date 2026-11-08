@@ -1,7 +1,7 @@
 import { ArrowRight, Lightbulb } from 'lucide-react'
 import { Link } from 'react-router'
 
-import { PageError, PageLoading } from '@/components/PageState'
+import { ApiErrorState, PageLoading } from '@/components/PageState'
 import { useApi } from '@/hooks/useApi'
 import type { MemberRecommendations, Period } from '@/lib/api'
 import { analyticsQuery, periodLabel } from '@/lib/format'
@@ -10,7 +10,7 @@ export function RecommendationList({ memberId, period }: { memberId: string; per
   const recs = useApi<MemberRecommendations>(`/api/members/${memberId}/recommendations?${analyticsQuery(period)}`)
 
   if (recs.status === 'loading') return <PageLoading label="Loading recommendations" />
-  if (recs.status === 'error') return <PageError title="Couldn’t load recommendations" message={recs.error.message} />
+  if (recs.status === 'error') return <ApiErrorState title="Couldn’t load recommendations" error={recs.error} onRetry={recs.retry} />
 
   const evaluated = recs.data.period.key
   return (

@@ -6,7 +6,7 @@ from uuid import UUID
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from app.auth import AuthError, CurrentUser, verify_access_token
+from app.auth import AuthError, AuthUnavailableError, CurrentUser, verify_access_token
 from app.config import Settings, get_settings
 from app.db import get_supabase
 from app.repositories.events import EventRepository, SupabaseEventRepository
@@ -43,6 +43,8 @@ def get_current_user(
         raise HTTPException(
             status.HTTP_401_UNAUTHORIZED, str(exc), headers={"WWW-Authenticate": "Bearer"}
         ) from exc
+    except AuthUnavailableError as exc:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(exc)) from exc
 
 
 def get_family_id(

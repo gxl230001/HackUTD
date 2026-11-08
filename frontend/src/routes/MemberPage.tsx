@@ -5,7 +5,7 @@ import { TrendChart } from '@/components/charts/TrendChart'
 import { DataSources } from '@/components/DataSources'
 import { MetricOverview } from '@/components/MetricOverview'
 import { PageHeader } from '@/components/PageHeader'
-import { PageError, PageLoading } from '@/components/PageState'
+import { ApiErrorState, DashboardSkeleton, PageError } from '@/components/PageState'
 import { PeriodSelector } from '@/components/PeriodSelector'
 import { RecommendationList } from '@/components/RecommendationList'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -34,16 +34,17 @@ export function MemberPage() {
     </Link>
   )
 
-  if (insights.status === 'loading') return <>{back}<PageLoading label="Loading member insights" /></>
+  if (insights.status === 'loading') return <>{back}<DashboardSkeleton /></>
   if (insights.status === 'error') {
     const notFound = insights.error.status === 404 || insights.error.status === 422
     return (
       <>
         {back}
-        <PageError
-          title={notFound ? 'Member not found' : 'Couldn’t load this member'}
-          message={notFound ? 'This member isn’t part of your family plan.' : insights.error.message}
-        />
+        {notFound ? (
+          <PageError title="Member not found" message="This member isn’t part of your family plan." />
+        ) : (
+          <ApiErrorState title="Couldn’t load this member" error={insights.error} onRetry={insights.retry} />
+        )}
       </>
     )
   }

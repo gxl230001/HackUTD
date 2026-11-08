@@ -3,7 +3,7 @@ import { TrendChart } from '@/components/charts/TrendChart'
 import { DataSources } from '@/components/DataSources'
 import { MetricOverview } from '@/components/MetricOverview'
 import { PageHeader } from '@/components/PageHeader'
-import { PageError, PageLoading } from '@/components/PageState'
+import { ApiErrorState, DashboardSkeleton, PageLoading } from '@/components/PageState'
 import { PeriodSelector } from '@/components/PeriodSelector'
 import { RecentActivity } from '@/components/RecentActivity'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,6 +18,12 @@ export function DashboardPage() {
   const family = useApi<Family>('/api/family')
   const summary = useApi<DashboardSummary>(`/api/dashboard/summary?${query}`)
   const trends = useApi<Trends>(`/api/dashboard/trends?${query}`)
+  // A failure usually hits every request at once, so one retry reloads them all.
+  const retryAll = () => {
+    family.retry()
+    summary.retry()
+    trends.retry()
+  }
 
   return (
     <>
@@ -27,8 +33,8 @@ export function DashboardPage() {
         actions={<PeriodSelector value={period} onChange={setPeriod} />}
       />
 
-      {summary.status === 'loading' && <PageLoading label="Loading family activity" />}
-      {summary.status === 'error' && <PageError title="Couldn’t load family activity" message={summary.error.message} />}
+      {summary.status === 'loading' && <DashboardSkeleton />}
+      {summary.status === 'error' && <ApiErrorState title="Couldn’t load family activity" error={summary.error} onRetry={retryAll} />}
 
       {summary.status === 'success' && (
         <div className="space-y-6">
@@ -45,7 +51,7 @@ export function DashboardPage() {
               </CardHeader>
               <CardContent>
                 {trends.status === 'loading' && <PageLoading label="Loading chart" />}
-                {trends.status === 'error' && <PageError title="Couldn’t load the chart" message={trends.error.message} />}
+                {trends.status === 'error' && <ApiErrorState title="Couldn’t load the chart" error={trends.error} onRetry={retryAll} />}
                 {trends.status === 'success' && <TrendChart points={trends.data.points} bucketDays={trends.data.period.bucket_days} />}
               </CardContent>
             </Card>

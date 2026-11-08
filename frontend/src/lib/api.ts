@@ -11,6 +11,36 @@ export class ApiError extends Error {
   }
 }
 
+const SESSION_EXPIRED_KEY = 'closeguard:session-expired'
+
+/** True once after the backend rejected the session; read by the sign-in page. */
+export function consumeSessionExpired(): boolean {
+  try {
+    const expired = sessionStorage.getItem(SESSION_EXPIRED_KEY) === '1'
+    sessionStorage.removeItem(SESSION_EXPIRED_KEY)
+    return expired
+  } catch {
+    return false
+  }
+}
+
+async function handleUnauthorized(): Promise<void> {
+  try {
+    sessionStorage.setItem(SESSION_EXPIRED_KEY, '1')
+  } catch {
+    // Storage unavailable; the redirect still happens.
+  }
+  await supabase?.auth.signOut({ scope: 'local' })
+}
+
+/** A message suitable for showing to the account holder. */
+export function friendlyError(error: ApiError): string {
+  if (error.status === 0) return 'Can’t reach the CloseGuard server. Check your connection and try again.'
+  if (error.status === 403) return 'No family is linked to this account yet.'
+  if (error.status >= 500 && /Request failed/.test(error.message)) return 'Something went wrong on our side. Please try again.'
+  return error.message
+}
+
 async function authHeader(): Promise<Record<string, string>> {
   if (!supabase) return {}
   const { data } = await supabase.auth.getSession()
@@ -28,7 +58,11 @@ export async function apiGet<T>(path: string, signal?: AbortSignal): Promise<T> 
     })
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') throw error
-    throw new ApiError(0, 'Could not reach the CloseGuard server.')
+    throw new ApiError(0, 'Can’t reach the CloseGuard server.')
+  }
+
+  if (response.status === 401 && supabase) {
+    await handleUnauthorized()
   }
 
   if (!response.ok) {

@@ -1,7 +1,8 @@
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet, ScrollRestoration } from 'react-router'
 
 import { DemoDataBanner } from '@/components/DemoDataBanner'
 import { Logo } from '@/components/Logo'
+import { OfflineBanner } from '@/components/OfflineBanner'
 import { NAV_ITEMS } from '@/components/layout/nav-items'
 import { cn } from '@/lib/utils'
 
@@ -12,7 +13,11 @@ import { cn } from '@/lib/utils'
 export function AppShell() {
   return (
     <div className="min-h-dvh bg-background">
+      {/* New pages start at the top; going back restores position. Keyed by path so
+          switching the period (a query-string change) doesn't jump the page. */}
+      <ScrollRestoration getKey={(location) => location.pathname} />
       <div className="sticky top-0 z-30">
+        <OfflineBanner />
         <DemoDataBanner />
         <header className="flex h-14 items-center border-b bg-card/95 px-4 backdrop-blur md:hidden">
           <Logo />

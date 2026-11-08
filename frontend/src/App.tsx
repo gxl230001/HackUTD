@@ -1,30 +1,41 @@
+import { lazy, Suspense, type ComponentType } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 
 import { AuthProvider } from '@/auth/AuthProvider'
 import { RequireAuth } from '@/auth/RequireAuth'
 import { AppShell } from '@/components/layout/AppShell'
-import { DashboardPage } from '@/routes/DashboardPage'
-import { MemberPage } from '@/routes/MemberPage'
-import { MembersPage } from '@/routes/MembersPage'
-import { NotFoundPage } from '@/routes/NotFoundPage'
-import { RecommendationPage } from '@/routes/RecommendationPage'
-import { SettingsPage } from '@/routes/SettingsPage'
+import { PageLoading } from '@/components/PageState'
+import { RouteError } from '@/routes/RouteError'
 import { SignInPage } from '@/routes/SignInPage'
 
+// Signed-in screens load on demand so the sign-in page stays light (charts are only fetched when needed).
+function page(load: () => Promise<{ [key: string]: ComponentType }>, name: string) {
+  const Component = lazy(() => load().then((module) => ({ default: module[name] })))
+  return (
+    <Suspense fallback={<PageLoading />}>
+      <Component />
+    </Suspense>
+  )
+}
+
 const router = createBrowserRouter([
-  { path: '/', element: <SignInPage /> },
+  { path: '/', element: <SignInPage />, errorElement: <RouteError /> },
   {
     element: <RequireAuth />,
+    errorElement: <RouteError />,
     children: [
       {
         element: <AppShell />,
         children: [
-          { path: '/dashboard', element: <DashboardPage /> },
-          { path: '/members', element: <MembersPage /> },
-          { path: '/members/:memberId', element: <MemberPage /> },
-          { path: '/members/:memberId/recommendations/:category', element: <RecommendationPage /> },
-          { path: '/settings', element: <SettingsPage /> },
-          { path: '*', element: <NotFoundPage /> },
+          { path: '/dashboard', element: page(() => import('@/routes/DashboardPage'), 'DashboardPage') },
+          { path: '/members', element: page(() => import('@/routes/MembersPage'), 'MembersPage') },
+          { path: '/members/:memberId', element: page(() => import('@/routes/MemberPage'), 'MemberPage') },
+          {
+            path: '/members/:memberId/recommendations/:category',
+            element: page(() => import('@/routes/RecommendationPage'), 'RecommendationPage'),
+          },
+          { path: '/settings', element: page(() => import('@/routes/SettingsPage'), 'SettingsPage') },
+          { path: '*', element: page(() => import('@/routes/NotFoundPage'), 'NotFoundPage') },
         ],
       },
     ],
