@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/PageHeader'
 import { ApiErrorState, DashboardSkeleton, PageError } from '@/components/PageState'
 import { PeriodSelector } from '@/components/PeriodSelector'
 import { RecommendationList } from '@/components/RecommendationList'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useApi } from '@/hooks/useApi'
 import { usePeriod } from '@/hooks/usePeriod'
 import type { MemberInsights } from '@/lib/api'
@@ -97,6 +97,13 @@ export function MemberPage() {
               <CardHeader>
                 <CardTitle>What we observed</CardTitle>
                 <CardDescription>Recurring patterns in the activity data. These describe activity, not intent or outcome.</CardDescription>
+                <CardAction>
+                  {/* Decorative mascot. Reduced-motion users get a still frame instead of the looping GIF. */}
+                  <picture aria-hidden>
+                    <source media="(prefers-reduced-motion: reduce)" srcSet="/brand/owl-sleeping-still.png" />
+                    <img src="/brand/owl-sleeping.gif" alt="" width={101} height={112} className="h-24 w-auto md:h-28" draggable={false} />
+                  </picture>
+                </CardAction>
               </CardHeader>
               <CardContent>
                 {patterns.length === 0 ? (
