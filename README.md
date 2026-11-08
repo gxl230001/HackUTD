@@ -104,6 +104,11 @@ Production build: `npm run build` (output in `frontend/dist`), preview with
 | `LOG_LEVEL` | no | Default `INFO` |
 | `GEMINI_API_KEY` | no | Free key from <https://aistudio.google.com/apikey>. Without it, fallback explanations are used. |
 | `GEMINI_MODEL` | no | Default `gemini-2.5-flash`; try `gemini-2.5-flash-lite` if you hit free-tier limits |
+| `GEMINI_TIMEOUT_SECONDS` | no | Default `8`; after this the fallback explanation is used |
+| `GEMINI_THINKING_BUDGET` | no | Default `0` (thinking off, saves quota); `-1` for models that require thinking |
+
+Check a Gemini key end to end (uses one request of quota):
+`cd backend && .venv/bin/python -m scripts.check_gemini`
 | `DEMO_USER_EMAIL`, `DEMO_USER_PASSWORD` | seed only | Demo account created by `scripts/seed_demo.py` (password ≥ 12 chars) |
 
 **frontend/.env** (public values only — everything `VITE_*` ships to the browser)
