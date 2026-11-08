@@ -1,8 +1,8 @@
-# Scam Circle
+# CloseGuard
 
 **Protection is stronger together.**
 
-Scam Circle is a mobile-first, installable web app (PWA). It helps people photograph or paste a suspicious text message, see a plain-language scam-risk assessment, and ask trusted family or friends for help before acting.
+CloseGuard is a mobile-first, installable web app (PWA). It helps people photograph or paste a suspicious text message, see a plain-language scam-risk assessment, and ask trusted family or friends for help before acting.
 
 > Hackathon project (HackUTD), **not an official T-Mobile product**.
 

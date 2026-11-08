@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Scam Circle",
-    short_name: "Scam Circle",
+    name: "CloseGuard",
+    short_name: "CloseGuard",
     description:
       "Check a suspicious text message and ask your trusted circle for help.",
     start_url: "/",

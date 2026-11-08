@@ -16,15 +16,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Scam Circle",
-    template: "%s · Scam Circle",
+    default: "CloseGuard",
+    template: "%s · CloseGuard",
   },
   description:
     "Check a suspicious text message and ask your trusted circle for help. Protection is stronger together.",
-  applicationName: "Scam Circle",
+  applicationName: "CloseGuard",
   appleWebApp: {
     capable: true,
-    title: "Scam Circle",
+    title: "CloseGuard",
     statusBarStyle: "default",
   },
   icons: {

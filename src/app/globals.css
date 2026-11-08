@@ -55,7 +55,7 @@
 }
 
 :root {
-  /* Scam Circle light theme. Primary #c20081 = hsl(320 100% 38%):
+  /* CloseGuard light theme. Primary #c20081 = hsl(320 100% 38%):
      white text on it measures 5.82:1 (WCAG AA needs 4.5:1). */
   --background: oklch(0.985 0.004 330);
   --foreground: oklch(0.18 0.01 330);
