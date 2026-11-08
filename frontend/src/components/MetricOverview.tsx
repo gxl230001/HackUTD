@@ -9,7 +9,7 @@ export function MetricOverview({ metrics }: { metrics: MemberMetrics }) {
   const blockShare = rateText(metrics.block_share)
   const reached = metrics.calls_reached_device.value
   return (
-    <div className="grid gap-7 md:grid-cols-3 md:gap-6">
+    <div className="grid gap-7 md:grid-cols-2 md:gap-6">
       <MetricGroup title="Scam exposure" description="Suspicious activity that reached the account.">
         <MetricCard tone="exposure" label="Suspicious calls" icon={PhoneIncoming} metric={metrics.calls_received} detail={reached !== null ? `${reached} reached a phone` : null} />
         <MetricCard tone="exposure" label="Suspicious messages" icon={MessageSquareWarning} metric={metrics.messages_received} />
@@ -18,9 +18,16 @@ export function MetricOverview({ metrics }: { metrics: MemberMetrics }) {
         <MetricCard tone="protection" label="Blocked calls" icon={Ban} metric={metrics.calls_blocked} detail={blockShare ? `${blockShare} of suspicious calls` : null} />
         <MetricCard tone="protection" label="Numbers reported" icon={Flag} metric={metrics.numbers_reported} />
       </MetricGroup>
-      <MetricGroup title="Suspicious interactions" description="Observed activity — not proof of harm.">
+      {/* Three tiles: full width on desktop (one row of three); on mobile the first tile spans the row. */}
+      <MetricGroup
+        title="Suspicious interactions"
+        description="Observed activity — not proof of harm."
+        className="md:col-span-2"
+        gridClassName="grid-cols-2 md:grid-cols-3"
+      >
         <MetricCard
           tone="interactions"
+          className="col-span-2 md:col-span-1"
           label="Labeled calls answered"
           icon={PhoneCall}
           metric={metrics.calls_answered}

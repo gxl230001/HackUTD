@@ -41,9 +41,9 @@ export function ApiErrorState({ title, error, onRetry }: { title: string; error:
 
 export function MetricsSkeleton() {
   return (
-    <div className="grid gap-7 md:grid-cols-3 md:gap-6" aria-hidden>
+    <div className="grid gap-7 md:grid-cols-2 md:gap-6" aria-hidden>
       {[0, 1, 2].map((group) => (
-        <div key={group} className="space-y-2">
+        <div key={group} className={group === 2 ? 'space-y-2 md:col-span-2' : 'space-y-2'}>
           <Skeleton className="h-4 w-32" />
           <Skeleton className="h-3 w-48" />
           <div className="grid grid-cols-2 gap-3">

@@ -13,10 +13,10 @@ const TONES: Record<MetricTone, { solid: string; soft: string }> = {
   interactions: { solid: 'bg-orange', soft: 'bg-orange-soft' },
 }
 
-export function MetricCard({ label, metric, detail, icon: Icon, tone }: { label: string; metric: Metric; detail?: string | null; icon: LucideIcon; tone: MetricTone }) {
+export function MetricCard({ label, metric, detail, icon: Icon, tone, className }: { label: string; metric: Metric; detail?: string | null; icon: LucideIcon; tone: MetricTone; className?: string }) {
   const unavailable = metric.value === null
   return (
-    <div className={cn('flex flex-col gap-3 rounded-[28px] p-5 text-foreground', unavailable ? TONES[tone].soft : TONES[tone].solid)}>
+    <div className={cn('flex flex-col gap-3 rounded-[28px] p-5 text-foreground', unavailable ? TONES[tone].soft : TONES[tone].solid, className)}>
       <div className="flex items-start justify-between gap-2">
         <span className="text-[13px] leading-4 font-semibold">{label}</span>
         <span className={cn('grid size-8 shrink-0 place-items-center rounded-full', unavailable ? 'bg-card' : 'bg-card/45')}>
